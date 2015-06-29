@@ -41,7 +41,7 @@ Example:
   </style>
 
   <template>
-    <select id="select2-wrapper-tag" style="width: 100%">
+    <select id="{{elementId}}" multiple style="width: 100%">
       <template is="dom-repeat" items="{{model}}">
         <option value="{{item.value}}">{{item.label}}</option> 
       </template>
@@ -55,12 +55,21 @@ Example:
   Polymer({
 
     is: 'select2-wrapper',
-
-    _onUpdateSelectItems: function (data) {
+   
+    _onUpdateSelectItems: function (data) {      
       if (data){
-        $(document).ready(function () {
-          $("#select2-wrapper-tag").select2({
+        $(document).ready(function () {          
+          $("#" + this.elementId).select2({
             data: data
+          });
+        });
+      }
+    },
+    _onUpdateSelectId: function (data) {
+      if (data){
+        $(document).ready(function () {          
+          $("#" + data).select2({
+            data: this.model
           });
         });
       }
@@ -74,7 +83,21 @@ Example:
         type: Array,
         value: null,
         observer: '_onUpdateSelectItems'
+      },
+      elementId: {
+        type: String,
+        value: null,
+        observer: '_onUpdateSelectId'
       }
+
+    },
+    ready: function(){     
+    },
+
+    deselectAll: function(){
+      $("#" + this.elementId).each(function () { //added a each loop here
+        $(this).select2('val', '')
+      });
     }
   });
 
