@@ -13,9 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
 <!--
 Polymer 1.0 wrapper for Select2
-
 Example:
-
     <select2-wrapper id="my_select2_element"></select2-wrapper>
     <script>
       document.getElementById('my_select2_element').model = [
@@ -25,7 +23,6 @@ Example:
         }
       ];
     </script>
-
 @group Wrappers
 @element select2-wrapper
 @demo demo/index.html
@@ -51,9 +48,7 @@ Example:
 </dom-module>
 
 <script>
-
   Polymer({
-
     is: 'select2-wrapper',
    
     _onUpdateSelectItems: function (data) {      
@@ -84,21 +79,21 @@ Example:
         value: null,
         observer: '_onUpdateSelectItems'
       },
+      /**
+       * This property sets the id for the select element, needed for several selects
+       * @type String
+       */
       elementId: {
         type: String,
-        value: null,
+        value: "select2-wrapper-tag",
         observer: '_onUpdateSelectId'
       }
-
-    },
-    ready: function(){     
-    },
-
+    },    
+    
     deselectAll: function(){
-      $("#" + this.elementId).each(function () { //added a each loop here
+      $("#" + this.elementId).each(function () {
         $(this).select2('val', '')
       });
     }
   });
-
 </script>
