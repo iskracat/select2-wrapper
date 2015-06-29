@@ -38,7 +38,7 @@ Example:
   </style>
 
   <template>
-    <select id="{{elementId}}" multiple style="width: 100%">
+    <select id="{{elementId}}" multiple="{{multiple}}" style="width: 100%">
       <template is="dom-repeat" items="{{model}}">
         <option value="{{item.value}}">{{item.label}}</option> 
       </template>
@@ -87,6 +87,14 @@ Example:
         type: String,
         value: "select2-wrapper-tag",
         observer: '_onUpdateSelectId'
+      },
+      /**
+       * This property lets the select be multiple or not
+       * @type Boolean
+       */
+      multiple: {
+        type: Boolean,
+        value: false        
       }
     },    
     
