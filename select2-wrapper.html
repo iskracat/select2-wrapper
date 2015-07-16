@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+
 <script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
 <link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
 <!--
@@ -38,11 +38,12 @@ Example:
   </style>
 
   <template>
-    <select id="{{elementId}}" multiple="{{multiple}}" style="width: 100%">
+    <!--<select data-tags="true" data-placeholder="Select an option" id="{{eId}}" multiple="{{multiple}}" style="width: 100%">
       <template is="dom-repeat" items="{{model}}">
         <option value="{{item.value}}">{{item.label}}</option> 
       </template>
-    </select>
+    </select>-->
+    <input id="{{eId}}" style="width:100%;">
   </template>
 
 </dom-module>
@@ -53,22 +54,16 @@ Example:
    
     _onUpdateSelectItems: function (data) {      
       if (data){
-        $(document).ready(function () {          
-          $("#" + this.elementId).select2({
-            data: data
-          });
-        });
+          $("#" + this.eId).select2({            
+            tags: this.model,
+            maximumSelectionSize: this.maxSelected,
+            placeholder: "Select...",
+            createSearchChoice: this.searchCreate
+          });          
+   
       }
     },
-    _onUpdateSelectId: function (data) {
-      if (data){
-        $(document).ready(function () {          
-          $("#" + data).select2({
-            data: this.model
-          });
-        });
-      }
-    },
+   
     properties: {
       /**
        * This property sets the select2 items
@@ -85,8 +80,7 @@ Example:
        */
       elementId: {
         type: String,
-        value: "select2-wrapper-tag",
-        observer: '_onUpdateSelectId'
+        value: "select2-wrapper-tag"
       },
       /**
        * This property lets the select be multiple or not
@@ -95,13 +89,58 @@ Example:
       multiple: {
         type: Boolean,
         value: false        
+      },
+      maxSelected: {
+        type: Number,
+        value: 1
+      },
+      canCreate: {
+        type: Boolean,
+        value: false        
       }
-    },    
+    },   
+
+    attached: function() {     
+      $("#" + this.eId).select2({        
+        tags: this.model,
+        maximumSelectionSize: this.maxSelected,
+        placeholder: "Select...",
+        createSearchChoice: this.searchCreate
+      });
+    },  
+
+    ready: function(){
+      this.eId = this.elementId + Date.now();
+      if(!this.canCreate){
+        this.searchCreate = function(term){        
+          return false;
+        }
+      }      
+    },  
     
     deselectAll: function(){
       $("#" + this.elementId).each(function () {
         $(this).select2('val', '')
       });
+    },
+
+    getSelectedValues: function(){
+      return $("#" + this.eId).val();
+    },
+
+    setValues: function(newVal){
+      var newValArray = newVal.split(",");
+      $("#" + this.eId).val(null).trigger("change");
+      $("#" + this.eId).val(newValArray).trigger("change");      
+    },
+
+    clear: function(){
+      $("#" + this.eId).val(null).trigger("change");
+    },
+
+    setModel: function(value){
+      this.model = value;
+      $("#" + this.eId).trigger("change");
     }
   });
 </script>
